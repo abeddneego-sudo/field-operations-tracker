@@ -614,9 +614,11 @@ export const OverallDashboardView: React.FC<OverallDashboardViewProps> = ({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Left Brand & Title */}
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-sm shadow-md shadow-emerald-600/20">
-                kea
-              </div>
+              <img 
+                src="/kea-logo.png" 
+                alt="KEA Corporate Hospitality Services" 
+                className="h-11 w-auto object-contain"
+              />
 
               <div>
                 <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase font-sans">

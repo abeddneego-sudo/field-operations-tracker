@@ -103,9 +103,11 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
         
         {/* BRAND HERO */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-600 text-white font-black text-xl shadow-md shadow-emerald-600/20 mb-3">
-            kea
-          </div>
+          <img 
+            src="/kea-logo.png" 
+            alt="KEA Corporate Hospitality Services" 
+            className="h-20 w-auto mx-auto object-contain mb-3 drop-shadow-sm"
+          />
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             KEA Operations Suite
           </h1>

@@ -253,9 +253,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Brand Logo Area */}
         <div className="p-4 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-sm shadow-sm shadow-emerald-600/20">
-              kea
-            </div>
+            <img 
+              src="/kea-logo.png" 
+              alt="KEA Corporate Hospitality Services" 
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <div className="text-xs font-bold text-slate-900 tracking-tight uppercase">KEA Operations</div>
               <div className="text-[11px] text-emerald-600 font-semibold">Hospitality Suite</div>

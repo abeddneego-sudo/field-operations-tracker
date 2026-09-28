@@ -34,7 +34,7 @@ export const VSRPlatformShell: React.FC<VSRPlatformShellProps> = ({ user, onSign
       <div>
         <div className="flex items-center justify-between border-b border-slate-100 p-5">
           <div className="flex items-center gap-3">
-            <img alt="KEA Corporate Hospitality Services" className="h-9 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaM-FAr5FKmzgGhQH5eWL6YXxVuMYXgDAKFN_R7hja3iHfyknwvu7yBhjXKUY76ANao3E5ud0dMVdQUxs77cYxyUZEKntxE1DScy8Z93vCQATIEgwPqiO5DlH9-u0drJ3mWKWUtwTECHt1jRISb007pK6PvRhC9pIG5ksxGsFw84QPcvxwqc723WynagMHw61ou_Ly3A8r3i63Tup_-nO-uwIGfhGiR_WhE0xBrmd7illUTzyX9bHWqEMC0UMMWEctYg" />
+            <img alt="KEA Corporate Hospitality Services" className="h-9 w-auto object-contain" src="/kea-logo.png" />
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-slate-800">KEA Operations</div>
               <div className="text-[10px] font-semibold tracking-tight text-emerald-700">Field Command</div>
