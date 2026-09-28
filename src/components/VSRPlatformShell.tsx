@@ -33,12 +33,8 @@ export const VSRPlatformShell: React.FC<VSRPlatformShellProps> = ({ user, onSign
     <div className="flex h-full flex-col justify-between bg-white">
       <div>
         <div className="flex items-center justify-between border-b border-slate-100 p-5">
-          <div className="flex items-center gap-3">
-            <img alt="KEA Corporate Hospitality Services" className="h-9 w-auto object-contain" src="/kea-logo.png" />
-            <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-slate-800">KEA Operations</div>
-              <div className="text-[10px] font-semibold tracking-tight text-emerald-700">Field Command</div>
-            </div>
+          <div className="flex items-center">
+            <img alt="KEA Corporate Hospitality Services" className="h-10 w-auto object-contain" src="/kea-logo.png" />
           </div>
           <button onClick={() => setMobileOpen(false)} className="rounded p-1 text-slate-400 hover:text-slate-700 md:hidden" title="Close menu"><X size={16} /></button>
         </div>

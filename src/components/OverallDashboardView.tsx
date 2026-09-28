@@ -612,22 +612,13 @@ export const OverallDashboardView: React.FC<OverallDashboardViewProps> = ({
         {/* HEADER SECTION (Clean Light Header) */}
         <div className="bg-white px-6 py-5 border-b border-slate-100">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            {/* Left Brand & Title */}
-            <div className="flex items-center gap-3.5">
+            {/* Left Brand */}
+            <div className="flex items-center">
               <img 
                 src="/kea-logo.png" 
                 alt="KEA Corporate Hospitality Services" 
-                className="h-11 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
-
-              <div>
-                <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase font-sans">
-                  KEA GROUP OPERATIONS
-                </h1>
-                <h2 className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">
-                  VSR Workforce &amp; Recruitment Master Dashboard
-                </h2>
-              </div>
             </div>
 
             {/* Right Period & Subtitle */}
