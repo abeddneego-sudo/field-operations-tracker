@@ -40,6 +40,7 @@ import { NotificationDrawer } from './components/NotificationDrawer';
 import { ShiftComplianceModal } from './components/ShiftComplianceModal';
 import { TelemetryPreferencesPanel } from './components/TelemetryPreferencesPanel';
 import { TelemetrySparkline } from './components/TelemetrySparkline';
+import { VSRDashboard } from './components/VSRDashboard';
 import { TelemetryPreferencesConfig } from './types';
 import { loadTelemetryPreferences } from './data/telemetryPreferencesData';
 import { Users, Search, Download, Plus, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
@@ -72,10 +73,21 @@ export default function App() {
     return PRESET_CREDENTIALS[0].user; // Default: Tope Balogun (CEO)
   });
 
+  const [platformView, setPlatformView] = useState<'admin' | 'vsr'>(() => {
+    try {
+      const stored = localStorage.getItem('kea_platform_view');
+      if (stored === 'vsr' || stored === 'admin') return stored;
+    } catch (e) {}
+    return 'admin';
+  });
+
   const handleSignIn = (user: AuthUser) => {
     setCurrentUser(user);
+    const view = user.role === 'VSR' || user.role === 'ASSISTANT_VSR' ? 'vsr' : 'admin';
+    setPlatformView(view);
     try {
       localStorage.setItem('kea_current_user', JSON.stringify(user));
+      localStorage.setItem('kea_platform_view', view);
     } catch (e) {
       console.error(e);
     }
@@ -83,8 +95,10 @@ export default function App() {
 
   const handleSignOut = () => {
     setCurrentUser(null);
+    setPlatformView('admin');
     try {
       localStorage.removeItem('kea_current_user');
+      localStorage.removeItem('kea_platform_view');
     } catch (e) {
       console.error(e);
     }
@@ -281,6 +295,22 @@ export default function App() {
     return <SignInPage onSignIn={handleSignIn} />;
   }
 
+  // If in VSR platform view or logged in as VSR
+  if (platformView === 'vsr' || currentUser.role === 'VSR' || currentUser.role === 'ASSISTANT_VSR') {
+    return (
+      <VSRDashboard
+        user={currentUser}
+        onSignOut={handleSignOut}
+        onSwitchToSuperAdmin={() => {
+          setPlatformView('admin');
+          try {
+            localStorage.setItem('kea_platform_view', 'admin');
+          } catch (e) {}
+        }}
+      />
+    );
+  }
+
   return (
     <div className="flex min-h-screen w-full bg-[#f8fafc] text-slate-800 font-sans">
       {/* LEFT SIDEBAR */}
@@ -303,6 +333,12 @@ export default function App() {
         preferences={telemetryPreferences}
         onUpdatePreferences={setTelemetryPreferences}
         onOpenTelemetryPreferences={() => setIsTelemetryPreferencesOpen(true)}
+        onSwitchToVsr={() => {
+          setPlatformView('vsr');
+          try {
+            localStorage.setItem('kea_platform_view', 'vsr');
+          } catch (e) {}
+        }}
       />
 
       {/* MAIN CONTENT WRAPPER */}
@@ -328,6 +364,12 @@ export default function App() {
           onOpenOverallDashboard={() => setCurrentScreen('overall_dashboard')}
           currentUser={currentUser}
           onSignOut={handleSignOut}
+          onSwitchToVsr={() => {
+            setPlatformView('vsr');
+            try {
+              localStorage.setItem('kea_platform_view', 'vsr');
+            } catch (e) {}
+          }}
         />
 
         {/* MAIN BODY AREA */}

@@ -75,6 +75,109 @@ export const PRESET_CREDENTIALS: GeneratedCredential[] = [
   }
 ];
 
+export const PRESET_VSR_CREDENTIALS: GeneratedCredential[] = [
+  {
+    user: {
+      id: 'usr_vsr_ruth_eze',
+      name: 'Ruth Eze',
+      email: 'ruth.eze@keahospitality.ng',
+      role: 'VSR',
+      roleTitle: 'Senior Van Sales Representative',
+      department: 'Field Sales & Merchandising - Lagos Island',
+      initials: 'RE',
+      avatarColor: '#10b981',
+      assignedRegion: 'Lagos',
+      securityClearance: 'Level 1 (Field Rep)',
+      lastLogin: '2026-09-28 07:12 WAT',
+      staffCode: 'KEA-VSR-041',
+      platform: 'vsr',
+      sessionMeta: {
+        signedInAt: '2026-09-28T07:12:00Z',
+        timezone: 'Africa/Lagos',
+        hub: 'Lagos Island Core'
+      }
+    },
+    passwordText: 'VSR-Lagos-2026!',
+    description: 'Senior VSR covering Mile 2 - Eko Atlantic corridor. 14 daily outlets, active POS float, insured.',
+    badge: 'Senior VSR (Lagos Island)'
+  },
+  {
+    user: {
+      id: 'usr_vsr_folashade_field',
+      name: 'Folashade Alabi',
+      email: 'folashade.field@keahospitality.ng',
+      role: 'VSR',
+      roleTitle: 'Van Sales Lead (Trade Fair)',
+      department: 'Field Merchandising & POS Sales',
+      initials: 'FA',
+      avatarColor: '#f59e0b',
+      assignedRegion: 'Lagos',
+      securityClearance: 'Level 1 (Field Rep)',
+      lastLogin: '2026-09-28 07:45 WAT',
+      staffCode: 'KEA-VSR-042',
+      platform: 'vsr',
+      sessionMeta: {
+        signedInAt: '2026-09-28T07:45:00Z',
+        timezone: 'Africa/Lagos',
+        hub: 'Trade Fair Corridor'
+      }
+    },
+    passwordText: 'VSR-Field-2026!',
+    description: 'VSR covering Trade Fair corridor. Outstanding micro-loan balance: ₦80,000.',
+    badge: 'VSR Lead (Trade Fair)'
+  },
+  {
+    user: {
+      id: 'usr_vsr_akinfolarin',
+      name: 'Akinfolarin Dada',
+      email: 'akin.dada@keahospitality.ng',
+      role: 'VSR',
+      roleTitle: 'Regional Van Sales Rep',
+      department: 'Field Merchandising - Oyo Hub',
+      initials: 'AD',
+      avatarColor: '#0284c7',
+      assignedRegion: 'Ibadan',
+      securityClearance: 'Level 1 (Field Rep)',
+      lastLogin: '2026-09-28 07:20 WAT',
+      staffCode: 'KEA-VSR-043',
+      platform: 'vsr',
+      sessionMeta: {
+        signedInAt: '2026-09-28T07:20:00Z',
+        timezone: 'Africa/Lagos',
+        hub: 'Bodija Cluster'
+      }
+    },
+    passwordText: 'VSR-Ibadan-2026!',
+    description: 'Oyo Cluster VSR covering Bodija - Mokola route. 18 outlets visited.',
+    badge: 'VSR (Ibadan Hub)'
+  },
+  {
+    user: {
+      id: 'usr_vsr_emeka_nwosu',
+      name: 'Emeka Nwosu',
+      email: 'emeka.nwosu@keahospitality.ng',
+      role: 'VSR',
+      roleTitle: 'Van Sales Representative',
+      department: 'Field Merchandising - Ogun Hub',
+      initials: 'EN',
+      avatarColor: '#8b5cf6',
+      assignedRegion: 'Ogun',
+      securityClearance: 'Level 1 (Field Rep)',
+      lastLogin: '2026-09-28 07:30 WAT',
+      staffCode: 'KEA-VSR-044',
+      platform: 'vsr',
+      sessionMeta: {
+        signedInAt: '2026-09-28T07:30:00Z',
+        timezone: 'Africa/Lagos',
+        hub: 'Abeokuta Trade'
+      }
+    },
+    passwordText: 'VSR-Ogun-2026!',
+    description: 'Ogun Hub VSR covering Abeokuta - Sagamu corridor. 11 outlets visited.',
+    badge: 'VSR (Ogun Hub)'
+  }
+];
+
 export function verifyCredentials(emailInput: string, passwordInput: string): AuthUser | null {
   const normalizedEmail = emailInput.trim().toLowerCase();
   const trimmedPassword = passwordInput.trim();
@@ -94,13 +197,43 @@ export function verifyCredentials(emailInput: string, passwordInput: string): Au
     return PRESET_CREDENTIALS[0].user;
   }
 
-  const found = PRESET_CREDENTIALS.find(
+  // VSR demo shortcut
+  if (
+    (normalizedEmail === 'vsr@keahospitality.ng' ||
+      normalizedEmail === 'vsr@kea.com' ||
+      normalizedEmail === 'vsr') &&
+    (trimmedPassword === 'vsr123' ||
+      trimmedPassword === 'vsr' ||
+      trimmedPassword === 'password' ||
+      trimmedPassword === 'admin123' ||
+      trimmedPassword === 'admin')
+  ) {
+    return PRESET_VSR_CREDENTIALS[0].user;
+  }
+
+  // Check Admin Presets
+  const foundAdmin = PRESET_CREDENTIALS.find(
     (c) =>
       c.user.email.toLowerCase() === normalizedEmail &&
       (c.passwordText === trimmedPassword || trimmedPassword === 'admin123' || trimmedPassword === 'admin')
   );
+  if (foundAdmin) return foundAdmin.user;
 
-  return found ? found.user : null;
+  // Check VSR Presets (by email or staff code)
+  const foundVsr = PRESET_VSR_CREDENTIALS.find(
+    (c) =>
+      (c.user.email.toLowerCase() === normalizedEmail ||
+        c.user.staffCode?.toLowerCase() === normalizedEmail) &&
+      (c.passwordText === trimmedPassword ||
+        trimmedPassword === 'vsr123' ||
+        trimmedPassword === 'vsr' ||
+        trimmedPassword === 'admin123' ||
+        trimmedPassword === 'admin' ||
+        trimmedPassword === 'password')
+  );
+  if (foundVsr) return foundVsr.user;
+
+  return null;
 }
 
 export function generateCustomAuditorCredential(hubScope: 'All' | 'Lagos' | 'Ibadan' | 'Ogun' | 'Benin' = 'All'): GeneratedCredential {

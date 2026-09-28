@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AuthUser, GeneratedCredential } from '../types';
-import { PRESET_CREDENTIALS, verifyCredentials, generateCustomAuditorCredential } from '../data/credentialsData';
-import { Lock, Mail, CheckCircle, Shield, ArrowRight, Copy, Key, UserCheck, Eye, EyeOff } from 'lucide-react';
+import { PRESET_CREDENTIALS, PRESET_VSR_CREDENTIALS, verifyCredentials, generateCustomAuditorCredential } from '../data/credentialsData';
+import { Lock, Mail, CheckCircle, Shield, ArrowRight, Copy, Key, UserCheck, Eye, EyeOff, Truck, ShieldCheck } from 'lucide-react';
 
 interface SignInPageProps {
   onSignIn: (user: AuthUser) => void;
@@ -9,12 +9,12 @@ interface SignInPageProps {
 }
 
 export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail = '' }) => {
+  const [activePortalTab, setActivePortalTab] = useState<'admin' | 'vsr'>('admin');
   const [email, setEmail] = useState<string>(defaultEmail || PRESET_CREDENTIALS[0].user.email);
   const [password, setPassword] = useState<string>(PRESET_CREDENTIALS[0].passwordText);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Dynamic Generator State
   const [generatedList, setGeneratedList] = useState<GeneratedCredential[]>([]);
@@ -43,7 +43,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
         onSignIn(authenticatedUser);
       } else {
         setIsLoading(false);
-        setErrorMessage('Invalid corporate credentials. Please select one of the pre-generated accounts below or generate a temporary audit key.');
+        setErrorMessage('Invalid corporate credentials. Please select one of the pre-generated accounts below.');
       }
     }, 400);
   };
@@ -61,21 +61,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
     }, 300);
   };
 
-  // Generate dynamic auditor account
-  const handleGenerateNewCredential = () => {
-    const newCred = generateCustomAuditorCredential(genHub);
-    setGeneratedList((prev) => [newCred, ...prev]);
-    setEmail(newCred.user.email);
-    setPassword(newCred.passwordText);
-    setErrorMessage('');
-  };
-
-  // Copy helper
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(id);
-    setTimeout(() => setCopiedKey(null), 2000);
-  };
+  const currentPresets = activePortalTab === 'admin' ? PRESET_CREDENTIALS : PRESET_VSR_CREDENTIALS;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col justify-between font-sans selection:bg-emerald-500 selection:text-white">
@@ -102,7 +88,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
       <main className="max-w-6xl w-full mx-auto px-4 py-8 lg:py-12 flex-1 flex flex-col justify-center">
         
         {/* BRAND HERO */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <img 
             src="/kea-logo.png" 
             alt="KEA Corporate Hospitality Services" 
@@ -112,8 +98,49 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
             KEA Operations Suite
           </h1>
           <p className="text-sm text-slate-500 mt-1 max-w-lg mx-auto">
-            Executive operations, sales staff allocations, field worker tracking, and shift compliance.
+            Executive operations, VSR mobile telemetry, live GPS tracking, and automated shift compliance.
           </p>
+        </div>
+
+        {/* PORTAL SWITCHER TABS */}
+        <div className="flex items-center justify-center mb-6">
+          <div className="inline-flex bg-slate-200/70 p-1.5 rounded-2xl border border-slate-200 shadow-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setActivePortalTab('admin');
+                setEmail(PRESET_CREDENTIALS[0].user.email);
+                setPassword(PRESET_CREDENTIALS[0].passwordText);
+                setErrorMessage('');
+              }}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
+                activePortalTab === 'admin'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <ShieldCheck className={`w-4 h-4 ${activePortalTab === 'admin' ? 'text-emerald-600' : 'text-slate-400'}`} />
+              <span>Super Admin Operations Console</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setActivePortalTab('vsr');
+                setEmail(PRESET_VSR_CREDENTIALS[0].user.email);
+                setPassword(PRESET_VSR_CREDENTIALS[0].passwordText);
+                setErrorMessage('');
+              }}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
+                activePortalTab === 'vsr'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Truck className={`w-4 h-4 ${activePortalTab === 'vsr' ? 'text-emerald-600' : 'text-slate-400'}`} />
+              <span>VSR Field Rep Portal (Live GPS)</span>
+            </button>
+          </div>
         </div>
 
         {/* 2-COLUMN SIGN IN & GENERATOR GRID */}
@@ -124,14 +151,14 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
             <div className="border-b border-slate-100 pb-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                  Sign In
+                  {activePortalTab === 'admin' ? 'Super Admin Sign In' : 'VSR Field Portal Sign In'}
                 </h2>
                 <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
-                  SUPER ADMIN
+                  {activePortalTab === 'admin' ? 'EXECUTIVE' : 'FIELD REP'}
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                Enter your work email and password, or click a demo account.
+                Enter your work email/staff code and password, or click a 1-click demo account.
               </p>
             </div>
 
@@ -146,15 +173,15 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
               {/* Email Input */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-700">
-                  Work Email Address:
+                  {activePortalTab === 'admin' ? 'Work Email Address:' : 'VSR Email / Staff Code:'}
                 </label>
                 <div className="relative">
                   <input
-                    type="email"
+                    type="text"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@keahospitality.ng"
+                    placeholder={activePortalTab === 'admin' ? 'name@keahospitality.ng' : 'KEA-VSR-041 or ruth.eze@keahospitality.ng'}
                     className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none transition-all font-mono"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
@@ -170,7 +197,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
+                    className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                   >
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
@@ -181,26 +208,25 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
+                    placeholder="••••••••••••"
                     className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none transition-all font-mono"
                   />
-                  <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 cursor-pointer hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </span>
+                  <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
                 </div>
               </div>
 
-              {/* Remember Session */}
+              {/* Security Badge */}
               <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" defaultChecked className="rounded border-slate-300 text-emerald-600 focus:ring-0" />
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  />
                   <span>Stay signed in</span>
                 </label>
-                <span className="text-[11px] text-emerald-600 font-semibold">
-                  Secure Session
+                <span className="text-[11px] text-emerald-600 font-semibold font-mono">
+                  TLS 1.3 Verified
                 </span>
               </div>
 
@@ -215,20 +241,20 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
                 ) : (
                   <>
                     <Lock className="w-4 h-4" />
-                    <span>Sign In to Operations Suite</span>
+                    <span>{activePortalTab === 'admin' ? 'Sign In to Super Admin Console' : 'Sign In to VSR Field Portal'}</span>
                   </>
                 )}
               </button>
             </form>
 
-            {/* Quick 1-Click Access as CEO */}
+            {/* Quick 1-Click Access */}
             <div className="pt-3 border-t border-slate-100 text-center">
               <button
                 type="button"
-                onClick={() => handleQuickSignIn(PRESET_CREDENTIALS[0])}
-                className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold transition-colors inline-flex items-center gap-1.5"
+                onClick={() => handleQuickSignIn(currentPresets[0])}
+                className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold transition-colors inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Instant 1-Click Login as Tope Balogun (CEO)</span>
+                <span>Instant 1-Click Login as {currentPresets[0].user.name}</span>
                 <span>→</span>
               </button>
             </div>
@@ -240,10 +266,10 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
                 <div>
                   <h3 className="text-sm font-bold text-slate-900">
-                    Authorized Demo Accounts (4 Roles)
+                    {activePortalTab === 'admin' ? 'Super Admin Executive Accounts (4 Roles)' : 'VSR Field Representative Accounts (4 Hubs)'}
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Click any card below to log in immediately with that role.
+                    Click any card below to log in immediately with live data.
                   </p>
                 </div>
                 <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 font-bold">
@@ -253,7 +279,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSignIn, defaultEmail =
 
               {/* Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {PRESET_CREDENTIALS.map((cred) => {
+                {currentPresets.map((cred) => {
                   const isCurrent = email.toLowerCase() === cred.user.email.toLowerCase();
 
                   return (

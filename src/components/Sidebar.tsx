@@ -24,6 +24,7 @@ interface SidebarProps {
   preferences?: TelemetryPreferencesConfig;
   onUpdatePreferences?: (prefs: TelemetryPreferencesConfig) => void;
   onOpenTelemetryPreferences?: () => void;
+  onSwitchToVsr?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -37,7 +38,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSignOut,
   preferences,
   onUpdatePreferences,
-  onOpenTelemetryPreferences
+  onOpenTelemetryPreferences,
+  onSwitchToVsr
 }) => {
   const [isInlinePreferencesExpanded, setIsInlinePreferencesExpanded] = useState(false);
 
@@ -280,6 +282,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <span className="text-[11px] font-mono font-bold text-emerald-700">99.8% Online</span>
         </div>
+
+        {/* Quick VSR Field Portal Switcher Button */}
+        {onSwitchToVsr && (
+          <div className="p-3 border-b border-slate-100">
+            <button
+              onClick={onSwitchToVsr}
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-xs shadow-sm shadow-emerald-600/20 flex items-center justify-between transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <span>🚚</span>
+                <span>VSR Field Portal</span>
+              </div>
+              <span className="text-[10px] font-mono bg-white/20 px-1.5 py-0.5 rounded">Live GPS →</span>
+            </button>
+          </div>
+        )}
 
         {/* Primary Navigation Links */}
         <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">

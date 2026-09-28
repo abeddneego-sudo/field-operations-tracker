@@ -38,6 +38,7 @@ import {
 import { useRealtimeDashboard } from '../hooks/useRealtimeDashboard';
 import { DashboardDrillDownModal } from './DashboardDrillDownModal';
 import { DashboardLiveFeedWidget } from './DashboardLiveFeedWidget';
+import { SuperAdminTriggerConsole } from './SuperAdminTriggerConsole';
 
 type UnifiedRecord =
   | ({ recordCategory: 'vsr' } & LiveVsrRecord)
@@ -835,6 +836,11 @@ export const OverallDashboardView: React.FC<OverallDashboardViewProps> = ({
                   <span>🚩 Red Flagged: 3</span>
                 </button>
               </div>
+            </div>
+
+            {/* AUTOMATED COMPLIANCE TRIGGER ENGINE */}
+            <div className="p-5 bg-slate-50/50 border-b border-slate-100">
+              <SuperAdminTriggerConsole />
             </div>
 
             {/* SECTION DIVIDER BAR (Subtle Light Background) */}

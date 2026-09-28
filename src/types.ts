@@ -8,14 +8,21 @@ export interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: 'CEO' | 'OPS_DIRECTOR' | 'REGIONAL_SUPERVISOR' | 'AUDIT_LEAD';
+  role: 'CEO' | 'OPS_DIRECTOR' | 'REGIONAL_SUPERVISOR' | 'AUDIT_LEAD' | 'VSR' | 'ASSISTANT_VSR';
   roleTitle: string;
   department: string;
   initials: string;
   avatarColor: string;
   assignedRegion: 'All' | 'Lagos' | 'Ibadan' | 'Ogun' | 'Benin';
-  securityClearance: 'Level 5 (Unrestricted)' | 'Level 4 (Regional Ops)' | 'Level 3 (Audit & HR)';
+  securityClearance: 'Level 5 (Unrestricted)' | 'Level 4 (Regional Ops)' | 'Level 3 (Audit & HR)' | 'Level 1 (Field Rep)';
   lastLogin?: string;
+  staffCode?: string;
+  platform?: 'admin' | 'vsr';
+  sessionMeta?: {
+    signedInAt: string;
+    timezone: string;
+    hub: string;
+  };
 }
 
 export interface GeneratedCredential {
